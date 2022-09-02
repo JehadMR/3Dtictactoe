@@ -1,6 +1,6 @@
 import random as rd
 
-#switch the player
+#switch the player,
 def switch_player(notlocal):
     # global current_player, player_1, player_2
     if notlocal.current_player == notlocal.player_1:
