@@ -1,8 +1,7 @@
 import random as rd
 
-#switch the player,
+#switch the player
 def switch_player(notlocal):
-    # global current_player, player_1, player_2
     if notlocal.current_player == notlocal.player_1:
         notlocal.current_player = notlocal.player_2
     else:
@@ -30,8 +29,6 @@ def player_name(notlocal):
             notlocal.current_player = notlocal.player_1
         print(f'THE PLAYER THAT HAS {notlocal.player_1["xoro"]} IS ===> {notlocal.player_1["name"]}')
         print(f'THE PLAYER THAT HAS {notlocal.player_2["xoro"]} IS ===> {notlocal.player_2["name"]}')
-        print(
-            f'Current player is ===> {notlocal.current_player["name"]} and they  have {notlocal.current_player["xoro"]}')
 
 def check_tie(notlocal):
   if not any(isinstance(int(i),int) for i in notlocal.board3d):
@@ -67,7 +64,7 @@ def get_input(notlocal):
    # global current_player
    current_player_token = notlocal.current_player['xoro']
    while not valid_input:
-      player_input = input(f'In which cell number {current_player_token} go? => ')
+      player_input = input(f'{notlocal.current_player["name"]},In which cell number should {current_player_token} go? => ')
       try:
          player_input = int(player_input)
       except:
@@ -76,13 +73,27 @@ def get_input(notlocal):
       if player_input >= 1 and player_input <= 27:
          if(str(notlocal.board3d[player_input].strip()) not in "XO"):
             notlocal.board3d[player_input] = (' ') + current_player_token
-            draw(notlocal)
+            # draw(notlocal)
             notlocal.current_player['moves'].append(player_input - 1)
             valid_input = True
          else:
             print("Busy place!")
       else:
         print("Wrong input. Must be 1 to 27, according to cell umbers.")
+
+
+def another_round(notlocal, continue_playing):
+    if continue_playing in 'Nn':
+        print('Visit me again, even if once every year \U0001F927')
+        notlocal.game_running = False
+        notlocal.another_game = False
+        # break
+    elif continue_playing in 'Yy':
+        print('\U0001F47E Still going huh? \U0001F47E')
+        notlocal.player_1['moves'] = []
+        notlocal.player_2['moves'] = []
+        notlocal.another_game = True
+
 
 def check_win(notlocal):
    win_combinations = [(0,1,2), (3,4,5), (6,7,8), (0,3,6), (1,4,7), (2,5,8), (0,4,8), (2,4,6),
@@ -93,31 +104,19 @@ def check_win(notlocal):
                 (5,13,21),(1,13,25),(7,13,19),(0,13,26),(2,13,24),(8,13,18),(6,13,20),(4,13,22)] #remove(4,13,22) if no
 
    player_moves = notlocal.current_player['moves']
-   win = False
    for combination in win_combinations:
        counter = 0
        for ele in player_moves:
-           # checking using in operator
            if ele in combination:
                if counter == 2:
-                   win = True
                    print(f'\U0001F60D Congrats! {notlocal.current_player["name"]} has won! \U0001F60D')
                    notlocal.current_player['score'] += 1
-                   print(f'{notlocal.player_1["name"]} score is ===> {notlocal.player_1["score"]}')
-                   print(f'{notlocal.player_2["name"]} score is ===> {notlocal.player_2["score"]}')
+                   print(f'{notlocal.player_1["name"]}\'s score is ===> {notlocal.player_1["score"]}')
+                   print(f'{notlocal.player_2["name"]}\'s score is ===> {notlocal.player_2["score"]}')
                    continue_playing = input('Do you want another round? [Y/N]: ')
-                   if continue_playing in 'Nn':
-                       notlocal.game_running = False
-                       notlocal.another_game = False
-                       break
-                   elif continue_playing in 'Yy':
-                       notlocal.player_1['moves'] = []
-                       notlocal.player_2['moves'] = []
-                       notlocal.another_game = True
-
-                   # notlocal.game_running = False
-                   # break
+                   another_round(notlocal, continue_playing)
                counter += 1
+
 
 
 def new_game(notlocal):
@@ -141,7 +140,6 @@ def tic_tac_toe():
         player_2 = {'name': 'default', 'xoro': 'O', 'moves': [], 'score': 0}
         current_player = None
         game_running = True
-        round_changed = False
         another_game = False
     player_name(notlocal)
     new_game(notlocal)
@@ -149,9 +147,5 @@ def tic_tac_toe():
         new_game(notlocal)
 
 tic_tac_toe()
-
-
-
-
 
 
